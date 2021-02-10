@@ -5,7 +5,8 @@
 	import java.awt.Font;
 	import java.awt.Graphics;
 	import java.awt.Rectangle;
-	import java.awt.event.ActionEvent;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
 	import java.awt.event.ActionListener;
 	import java.awt.event.KeyEvent;
 	import java.awt.event.KeyListener;
@@ -23,19 +24,22 @@ import javax.swing.JPanel;
 	    private boolean gameOver, started;
 	    private Timer timer;
 	    private List<Rectangle> pipes;
+	    private Rectangle test;
 	    private Rectangle Birb;
-		public int ticks, yFall;
+		public int ticks, yFall, score;
 
 	    public GameStructure(final int width, final int height) {
 	        this.gameOver = false;
 	        this.started = false;
 	        this.pipes = new ArrayList<>();
+	        this.score = 0;	// making the round score == 0
 
 	        for (int i = 0; i < 5; ++i) {
 	            addPipes(width, height);
 	        }
 
 	        this.Birb = new Rectangle(20, width/2-15, 30, 20);
+	        test = new Rectangle(20, 1, 10, 80);
 
 	        this.timer = new Timer(20, this);
 	        this.timer.start();
@@ -52,33 +56,50 @@ import javax.swing.JPanel;
 	        int y2 = -180 + a;
 	    	int x = 400;
 	        int y = 120 + a;
-	        pipes.add(new Rectangle(x, y, 20, 230));
-	        pipes.add(new Rectangle(x, y2, 20, 180));
+	        pipes.add(new Rectangle(x, y, 20, 300));
+	        pipes.add(new Rectangle(x, y2, 20, 100));
+	        
 	    }
 
 	    private void repaint(Graphics g) {
 	        final Dimension d = this.getSize();
 
+	        
 	        if (gameOver) {
 	            g.setColor(Color.red);
 	            g.fillRect(0, 0, d.width, d.height);    
 	            g.setColor(Color.black);
-	            g.setFont(new Font("Arial", Font.BOLD, 48));
-	            g.drawString("Game over!", 20, d.width/2-24);
+	            g.setFont(new Font("Arial", Font.BOLD, 65));
+	            g.drawString("Game over!", 15, d.width/2-24);
+	            
+	            
+	            g.setFont(new Font("Arial", Font.BOLD, 50));
+	            g.drawString("Score: " + String.valueOf(getScore()/7), 80, 300); // drawning final score of the round
+	            
+	            
 	            return;
 	        }
 
-	        // fill the background
+	
 	        g.setColor(Color.cyan);
 	        g.fillRect(0, 0, d.width, d.height);
+	        
+	        g.setColor(Color.black);
+	        g.setFont(new Font("Arial", Font.BOLD, 50));
+            g.drawString(String.valueOf(getScore()/7), 180, 100); // updating score
 
-	        // draw the aliens
+	
 	        for (Rectangle pipe : pipes) {
-	            g.setColor(Color.red);
+	            
+	        	g.setColor(Color.green);
 	            g.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
+ 
 	        }
 
-	        // draw the space ship
+	
+	        g.setColor(Color.red);
+	        g.fillRect(test.x, test.y, test.width, test.height);
+	        
 	        g.setColor(Color.black);
 	        g.fillRect(Birb.x, Birb.y, Birb.width, Birb.height);
 	    }
@@ -90,7 +111,8 @@ import javax.swing.JPanel;
 	            timer.stop();
 	            return;
 	        }
-	        int speed = 2;
+	        
+	        int speed = 4;
 	        
 	        ticks++; // gör att det bli varannan gång
 	        
@@ -99,14 +121,13 @@ import javax.swing.JPanel;
 	        	for (int i = 0; i < pipes.size(); i++) // bestämmer hur snabbt positionen på de gröna pellarna ska förflyttas
 				{
 					Rectangle column = pipes.get(i);
-
 					column.x -= speed;
 				}
 
 	        	
 				if (ticks % 2 == 0 && yFall < 15)
 				{
-					yFall += 2;
+					yFall += 1;
 				}
 
 	        	
@@ -115,27 +136,34 @@ import javax.swing.JPanel;
 	    
 	        }
 	        
+	        if(test.intersects(pipes.get(1)))
+	        {
+	        	setScore();
+	        }
+	  
+	        
 	        final List<Rectangle> toRemove = new ArrayList<>();
 
 	        for (Rectangle pipe : pipes) {
-	        	pipe.translate(-1, 0);
 	            if (pipe.x + pipe.width < 0) {
 	                toRemove.add(pipe);
 	            }
-
+	            
 	            if (pipe.intersects(Birb)) {
 	                gameOver = true;
 	            }
+	            
 	        }
 
 	        pipes.removeAll(toRemove);
 
-	        for (int i = 0; i < toRemove.size(); ++i) {
+
+	        for (int i = 0; i < toRemove.size()/2; ++i) {
 	            Dimension d = getSize();
 	            addPipes(d.width, d.height);
 	        }
 	        
-
+	        
 	        this.repaint();
 	    }
 
@@ -178,8 +206,21 @@ import javax.swing.JPanel;
 		}
 	    
 
+	    public void setScore() {
+	    	score++;
+	    }
 	    
-	    @Override
+	    public int getScore() {
+			return score;
+		}
+
+
+		
+		
+		
+		
+		
+		@Override
 	    public void keyTyped(KeyEvent e) {
 	        // do nothing
 	    }
