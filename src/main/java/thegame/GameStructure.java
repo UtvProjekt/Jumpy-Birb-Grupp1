@@ -1,18 +1,18 @@
 	package thegame;
 	  
+
 	import java.awt.Color;
 	import java.awt.Dimension;
 	import java.awt.Font;
 	import java.awt.Graphics;
 	import java.awt.Rectangle;
-	import java.awt.Shape;
 	import java.awt.event.ActionEvent;
 	import java.awt.event.ActionListener;
 	import java.awt.event.KeyEvent;
 	import java.awt.event.KeyListener;
 	import java.util.ArrayList;
 	import java.util.List;
-	import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 import javax.swing.JPanel;
@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 	    private Rectangle Birb;
 		public int ticks, yFall, score;
 		public int highScore;
+		private int speed;
 
 	    public GameStructure(final int width, final int height) {
 	        this.gameOver = false;
@@ -35,12 +36,12 @@ import javax.swing.JPanel;
 	        this.pipes = new ArrayList<>();
 	        this.score = 0;	// making the round score == 0
 
-	        for (int i = 0; i < 5; ++i) {
+	        for (int i = 0; i < 1; ++i) {
 	            addPipes(width, height);
 	        }
 
 	        this.Birb = new Rectangle(20, width/2-15, 30, 20);
-	        test = new Rectangle(20, 1, 10, 80);
+	        test = new Rectangle(20, 1, 10, 20);
 	        upp = new Rectangle(0, -10, 400, 5);
             down = new Rectangle(0, 420, 400, 5);
 	        
@@ -56,12 +57,12 @@ import javax.swing.JPanel;
 	    }
 
 	    private void addPipes(final int width, final int height) {
-	        int a = ThreadLocalRandom.current().nextInt(110,140);
-	        int y2 = -180 + a;
+	        int a = ThreadLocalRandom.current().nextInt(40, 220);
+	        int y2 = 0;
 	    	int x = 400;
-	        int y = 120 + a;
-	        pipes.add(new Rectangle(x, y, 20, 250));
-	        pipes.add(new Rectangle(x, y2, 20, 160));
+	        int y = 300;
+	        pipes.add(new Rectangle(x, y2, 20, a));
+	        pipes.add(new Rectangle(x, a+100, 20, 400));
 	
 	        
 	    }
@@ -117,8 +118,7 @@ import javax.swing.JPanel;
 	        g.setColor(Color.black);
 	        g.fillRect(Birb.x, Birb.y, Birb.width, Birb.height);
 	        
-	        g.setColor(Color.black);
-	        g.fillRect(test.x, test.y, test.width, test.height);
+	       
 	    }
 
 	    @Override
@@ -129,7 +129,7 @@ import javax.swing.JPanel;
 	            return;
 	        }
 	        
-	        int speed = 4;
+	        speed = 4;
 	        
 	        ticks++; // gör att det bli varannan gång
 	        
@@ -153,7 +153,7 @@ import javax.swing.JPanel;
 	    
 	        }
 	        
-	        if(test.intersects(pipes.get(1)))
+	        if(test.intersects(pipes.get(0)))
 	        {
 	        	setScore();
 	        }
@@ -180,12 +180,14 @@ import javax.swing.JPanel;
 
 	        pipes.removeAll(toRemove);
 
-
-	        for (int i = 0; i < toRemove.size()/2; ++i) {
-	            Dimension d = getSize();
-	            addPipes(d.width, d.height);
+	        for (int i = 0; i < toRemove.size()/2  ; ++i) {
+	            
+	            if(i==0) {
+	            	Dimension d = getSize();
+	            	addPipes(d.width, d.height);
+	            	
+	            }
 	        }
-	        
 	        
 	        this.repaint();
 	    }
@@ -213,17 +215,18 @@ import javax.swing.JPanel;
                     yFall = 0;
                 }
 
-                yFall -= 8;
+                yFall -= 9;
                 started = true;
             }
             else if (!gameOver)
             {
+            	yFall = 0;
                 if (yFall > 0)
                 {
                     yFall = 0;
                 }
 
-                yFall -= 10;
+                yFall -= 9;
             }
 		}
 		
@@ -259,14 +262,15 @@ import javax.swing.JPanel;
             	final int rbutton = e.getKeyCode();
             	if(rbutton == KeyEvent.VK_R) {
             		
+            		speed = 4;
             		yFall = 0;
             		this.gameOver = false;
             		this.started = false;
             		this.pipes = new ArrayList<>();
             		this.score = 0;    // making the round score == 0
             		
-            		for (int i = 0; i < 5; ++i) {
-            			addPipes(1920, 1080);
+            		for (int i = 0; i < 1; ++i) {
+            			addPipes(400, 400);
             		}
             		
             		this.Birb = new Rectangle(20, 400/2-15, 30, 20);
@@ -283,4 +287,3 @@ import javax.swing.JPanel;
 	    }
 	}
 	
-
