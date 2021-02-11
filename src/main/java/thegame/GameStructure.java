@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 	    private boolean gameOver, started;
 	    private Timer timer;
 	    private List<Rectangle> pipes;
-	    private Rectangle test;
+	    private Rectangle test, upp, down;
 	    private Rectangle Birb;
 		public int ticks, yFall, score;
 		public int highScore;
@@ -41,6 +41,9 @@ import javax.swing.JPanel;
 
 	        this.Birb = new Rectangle(20, width/2-15, 30, 20);
 	        test = new Rectangle(20, 1, 10, 80);
+	        upp = new Rectangle(0, -10, 400, 5);
+            down = new Rectangle(0, 420, 400, 5);
+	        
 
 	        this.timer = new Timer(20, this);
 	        this.timer.start();
@@ -59,6 +62,7 @@ import javax.swing.JPanel;
 	        int y = 120 + a;
 	        pipes.add(new Rectangle(x, y, 20, 250));
 	        pipes.add(new Rectangle(x, y2, 20, 160));
+	
 	        
 	    }
 
@@ -109,8 +113,12 @@ import javax.swing.JPanel;
 
 	
 	        
+	        
 	        g.setColor(Color.black);
 	        g.fillRect(Birb.x, Birb.y, Birb.width, Birb.height);
+	        
+	        g.setColor(Color.black);
+	        g.fillRect(test.x, test.y, test.width, test.height);
 	    }
 
 	    @Override
@@ -149,6 +157,12 @@ import javax.swing.JPanel;
 	        {
 	        	setScore();
 	        }
+	        
+	        if(Birb.intersects(upp) || Birb.intersects(down))
+	        {
+	        	gameOver = true;
+	        }
+	        
 	  
 	        
 	        final List<Rectangle> toRemove = new ArrayList<>();
