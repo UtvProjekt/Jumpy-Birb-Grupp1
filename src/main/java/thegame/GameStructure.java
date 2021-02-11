@@ -71,11 +71,11 @@ import javax.swing.JPanel;
 	            g.fillRect(0, 0, d.width, d.height);    
 	            g.setColor(Color.black);
 	            g.setFont(new Font("Arial", Font.BOLD, 65));
-	            g.drawString("Game over!", 15, d.width/2-24);
+	            g.drawString("Game over!", 15, 120);
 	            
 	            
 	            g.setFont(new Font("Arial", Font.BOLD, 50));
-	            g.drawString("Score: " + String.valueOf(getScore()/7), 90, 250); // drawning final score of the round
+	            g.drawString("Score: " + String.valueOf(getScore()/7), 90, 200); // drawning final score of the round
 	            
 	            if(highScore < getScore()/7)
 	            {
@@ -83,7 +83,10 @@ import javax.swing.JPanel;
 	            }
 	            
 	            g.setFont(new Font("Arial", Font.BOLD, 50));
-	            g.drawString("Highscore: " + highScore, 45, 325); // drawning final score of the round
+	            g.drawString("Highscore: " + highScore, 45, 275); // drawning highscore
+	            
+	            g.setFont(new Font("Arial", Font.BOLD, 30));
+	            g.drawString("Play again: r ", 90, 325); // drawning highscore
 	                  
 	            return;
 	        }
@@ -189,20 +192,27 @@ import javax.swing.JPanel;
 	    public void jump()
 		{
 	    	
-			if (!started)
-			{
-				started = true;
-			}
-			else if (!gameOver)
-			{
-				if (yFall > 0)
-				{
-					yFall = 0;
-				}
+	    	if (!started)
+            {
+                if (yFall > 0)
+                {
+                    yFall = 0;
+                }
 
-				yFall -= 10;
-			}
+                yFall -= 8;
+                started = true;
+            }
+            else if (!gameOver)
+            {
+                if (yFall > 0)
+                {
+                    yFall = 0;
+                }
+
+                yFall -= 10;
+            }
 		}
+		
 	    
 
 	    public void setScore() {
@@ -224,12 +234,37 @@ import javax.swing.JPanel;
 	    @Override
 	    public void keyPressed(KeyEvent e) {
 	    	
-	    	   final int kc = e.getKeyCode();
+	    	final int kc = e.getKeyCode();
 
-		        if (kc == KeyEvent.VK_SPACE) {
-		            
-		            	jump();
-		        }
+            if (kc == KeyEvent.VK_SPACE) {
+
+                    jump();
+            }
+            if(gameOver == true)
+            {
+            	final int rbutton = e.getKeyCode();
+            	if(rbutton == KeyEvent.VK_R) {
+            		
+            		yFall = 0;
+            		this.gameOver = false;
+            		this.started = false;
+            		this.pipes = new ArrayList<>();
+            		this.score = 0;    // making the round score == 0
+            		
+            		for (int i = 0; i < 5; ++i) {
+            			addPipes(1920, 1080);
+            		}
+            		
+            		this.Birb = new Rectangle(20, 400/2-15, 30, 20);
+            		test = new Rectangle(20, 1, 10, 80);
+            		
+            		this.timer = new Timer(20, this);
+            		this.timer.start();
+            		
+            	}
+            }
+            
+            
 
 	    }
 	}
