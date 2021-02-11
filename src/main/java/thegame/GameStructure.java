@@ -5,8 +5,8 @@
 	import java.awt.Font;
 	import java.awt.Graphics;
 	import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.event.ActionEvent;
+	import java.awt.Shape;
+	import java.awt.event.ActionEvent;
 	import java.awt.event.ActionListener;
 	import java.awt.event.KeyEvent;
 	import java.awt.event.KeyListener;
@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 	    private Rectangle test;
 	    private Rectangle Birb;
 		public int ticks, yFall, score;
+		public int highScore;
 
 	    public GameStructure(final int width, final int height) {
 	        this.gameOver = false;
@@ -56,8 +57,8 @@ import javax.swing.JPanel;
 	        int y2 = -180 + a;
 	    	int x = 400;
 	        int y = 120 + a;
-	        pipes.add(new Rectangle(x, y, 20, 300));
-	        pipes.add(new Rectangle(x, y2, 20, 100));
+	        pipes.add(new Rectangle(x, y, 20, 250));
+	        pipes.add(new Rectangle(x, y2, 20, 160));
 	        
 	    }
 
@@ -74,9 +75,16 @@ import javax.swing.JPanel;
 	            
 	            
 	            g.setFont(new Font("Arial", Font.BOLD, 50));
-	            g.drawString("Score: " + String.valueOf(getScore()/7), 80, 300); // drawning final score of the round
+	            g.drawString("Score: " + String.valueOf(getScore()/7), 90, 250); // drawning final score of the round
 	            
+	            if(highScore < getScore()/7)
+	            {
+	            	highScore = getScore()/7;
+	            }
 	            
+	            g.setFont(new Font("Arial", Font.BOLD, 50));
+	            g.drawString("Highscore: " + highScore, 45, 325); // drawning final score of the round
+	                  
 	            return;
 	        }
 
@@ -86,7 +94,7 @@ import javax.swing.JPanel;
 	        
 	        g.setColor(Color.black);
 	        g.setFont(new Font("Arial", Font.BOLD, 50));
-            g.drawString(String.valueOf(getScore()/7), 180, 100); // updating score
+            g.drawString(String.valueOf(getScore()/7), 175, 100); // updating score
 
 	
 	        for (Rectangle pipe : pipes) {
@@ -97,8 +105,6 @@ import javax.swing.JPanel;
 	        }
 
 	
-	        g.setColor(Color.red);
-	        g.fillRect(test.x, test.y, test.width, test.height);
 	        
 	        g.setColor(Color.black);
 	        g.fillRect(Birb.x, Birb.y, Birb.width, Birb.height);
@@ -173,14 +179,7 @@ import javax.swing.JPanel;
 	    @Override
 	    public void keyReleased(KeyEvent e) {
 
-	        final int kc = e.getKeyCode();
-
-	        if (kc == KeyEvent.VK_SPACE) {
-	            
-	            	jump();
-	        }
-
-	    
+	     
 	    }
 	    
 	    /**
@@ -217,9 +216,6 @@ import javax.swing.JPanel;
 
 		
 		
-		
-		
-		
 		@Override
 	    public void keyTyped(KeyEvent e) {
 	        // do nothing
@@ -227,7 +223,14 @@ import javax.swing.JPanel;
 
 	    @Override
 	    public void keyPressed(KeyEvent e) {
-	        // do nothing
+	    	
+	    	   final int kc = e.getKeyCode();
+
+		        if (kc == KeyEvent.VK_SPACE) {
+		            
+		            	jump();
+		        }
+
 	    }
 	}
 	
