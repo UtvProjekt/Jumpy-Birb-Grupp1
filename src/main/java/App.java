@@ -1,4 +1,5 @@
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import thegame.GameStructure;
 
@@ -11,9 +12,11 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
  */
 public class App {
     public static void main(String[] args) {
-        JFrame main = new JFrame("Flappy Birb");
+        JFrame main = new JFrame("Jumpy Birb");
 
-        GameStructure gs = new GameStructure(400, 400);
+        String difficulty = JOptionPane.showInputDialog(main, "Enter difficulty: easy, normal, hard");
+        
+        GameStructure gs = new GameStructure(400, 400, difficulty);
 
         main.setSize(400, 400);
         main.setResizable(false);
