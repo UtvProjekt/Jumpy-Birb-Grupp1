@@ -95,12 +95,6 @@ import javax.swing.JPanel;
 	        
 	        if (gameOver) {
         	    
-	        	String a = "src/main/java/thegame/test.txt";
-	        	File le = new File(a);
-	        	BufferedReader reader = new BufferedReader(new FileReader(le));
-	        	String line = reader.readLine();
-	        	reader.close();
-	        	BufferedWriter writer;
 
 	     	            	
 	            	g.setColor(Color.red);
@@ -114,6 +108,7 @@ import javax.swing.JPanel;
 	            	
 	            	
 	            	
+	            	String line = getHighscore();
 	            	int test;
 	            	
 	            	g.setFont(new Font("Arial", Font.BOLD, 50));
@@ -122,10 +117,8 @@ import javax.swing.JPanel;
 	            		
 	            			if((test = Integer.parseInt(line)) < getScore()/10)
 	            			{
-	            				writer = new BufferedWriter(new FileWriter(le));
 	            				String testar =  String.valueOf(getScore()/10);
-	            				writer.write(testar);
-	            				writer.close();
+	            				setHigscore(testar);
 	            			}
 	            	}
 
@@ -141,10 +134,8 @@ import javax.swing.JPanel;
 	            			
 	            			if(test < getScore()/7)
 	            			{
-	            				writer = new BufferedWriter(new FileWriter(le));
 	            				String testar =  String.valueOf(getScore()/7);
-	            				writer.write(testar);
-	            				writer.close();
+	            				setHigscore(testar);
 	            			}
 	            	}
 
@@ -154,19 +145,15 @@ import javax.swing.JPanel;
 	            		
 	            			if((test = Integer.parseInt(line)) < getScore()/5)
 	            			{
-	            				writer = new BufferedWriter(new FileWriter(le));
 	            				String testar =  String.valueOf(getScore()/5);
-	            				writer.write(testar);
-	            				writer.close();
+	            				setHigscore(testar);
 	            			}
 	            		
 	            	}
 
 
-	            	
-	            	reader = new BufferedReader(new FileReader(le));
-	            	line = reader.readLine();
-	            	reader.close();
+	            	line = getHighscore();
+
 	            	
 	            	System.out.println("här: " + line);
 	            	
@@ -219,6 +206,46 @@ import javax.swing.JPanel;
 	        
 	       
 	    }
+	    
+	    
+	    public void setHigscore(String score) {
+	    	String a = "highscore/highscore.txt";
+	    	File le = new File(a);
+	    	try(BufferedWriter writer = new BufferedWriter(new FileWriter(le));)
+	    	{
+				writer.write(score);
+
+			} 
+	    	catch(Exception e)
+	    	{
+				
+			}
+	    	
+	    	
+	    }
+	    
+	    public String getHighscore() {
+	    	
+	    	String a = "highscore/highscore.txt";
+	    	File le = new File(a);
+	    	String line = "";
+	    	try(BufferedReader reader = new BufferedReader(new FileReader(le));) {
+				
+	    		line = reader.readLine();
+			} 
+	    	catch (Exception e) {
+				
+			}
+			return line;
+	    	
+        	
+	    }
+	    
+	    
+	    
+	    
+	    
+	    
 	    	    
 	    
 
