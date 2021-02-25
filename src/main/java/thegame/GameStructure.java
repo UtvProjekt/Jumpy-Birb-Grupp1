@@ -29,7 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-
 public class GameStructure extends JPanel implements ActionListener, KeyListener {
 	private static final long serialVersionUID = 6260582674762246325L;
 
@@ -45,16 +44,19 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 	private boolean showTopTenHighscores;
 	private Map<Integer, String> mapForHighscores;
 	private ImageIcon image;
+	private JFrame mainFrame;
+	private JFrame newFrame = new JFrame();
 
-	public GameStructure(final int width, final int height, String difficulty, ImageIcon image) {
+	public GameStructure(final int width, final int height, String difficulty, ImageIcon image, JFrame mainFrame) {
 		this.gameOver = false;
 		this.started = false;
 		this.pipes = new ArrayList<>();
 		this.score = 0; // making the round score == 0
 		this.difficulty = difficulty;
 		this.image = image;
+		this.mainFrame = mainFrame;
 		showTopTenHighscores = false;
-		
+
 		for (int i = 0; i < 1; ++i) {
 			addPipes(width, height);
 		}
@@ -101,40 +103,31 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 		if (gameOver) {
 
-			
-			if(showTopTenHighscores) {
-			
-				
+			if (showTopTenHighscores) {
+
 				g.setColor(Color.red);
 				g.fillRect(0, 0, 400, 400);
 				g.setColor(Color.black);
-				
-				System.out.println("kommer in hit oscar");
-				
-				
+
 				int numberRanking = 1;
 				int moveTheDifferentScores = 40;
-				for (Map.Entry<Integer,String> entry : mapForHighscores.entrySet()) {
-					
-					
+				for (Map.Entry<Integer, String> entry : mapForHighscores.entrySet()) {
+
 					g.setFont(new Font("Arial", Font.BOLD, 20));
-					g.drawString(numberRanking + ". " + entry.getKey() + " - " + entry.getValue(), 35, moveTheDifferentScores);
+					g.drawString(numberRanking + ". " + entry.getKey() + " - " + entry.getValue(), 35,
+							moveTheDifferentScores);
 					numberRanking++;
 					moveTheDifferentScores += 30;
-					
+
 				}
-				
-				
-				
+
 				g.setFont(new Font("Arial", Font.BOLD, 20));
-				g.drawString("Play again: 'space' ", 100, 325); // drawning highscore
+				g.drawString("Play again: 'space' ", 100, 345); // drawning highscore
 				showTopTenHighscores = false;
 				return;
-				
+
 			}
-			
-			
-			
+
 			g.setColor(Color.red);
 			g.fillRect(0, 0, d.width, d.height);
 			g.setColor(Color.black);
@@ -143,37 +136,29 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 			getHighscore();
 
-
 			g.setFont(new Font("Arial", Font.BOLD, 50));
 			if (this.difficulty.toLowerCase().equals("easy")) {
-				g.drawString("Score: " + String.valueOf(getScore("easy")), 90, 200); // drawning final score of the round
-				checkIfNewHighscore("easy");
+				g.drawString("Score: " + String.valueOf(getScore("easy")), 90, 200); // drawning final score of the
+																						// round
+			} else if (this.difficulty.toLowerCase().equals("normal")) {
+				g.drawString("Score: " + String.valueOf(getScore("normal")), 90, 200); // drawning final score of the
+																						// round
+			} else if (this.difficulty.toLowerCase().equals("hard")) {
+				g.drawString("Score: " + String.valueOf(getScore("hard")), 90, 200); // drawning final score of the
+																						// round
 
 			}
-			else if (this.difficulty.toLowerCase().equals("normal")) {
-				g.drawString("Score: " + String.valueOf(getScore("normal")), 90, 200); // drawning final score of the round
-				checkIfNewHighscore("normal");
-			}
-			else if (this.difficulty.toLowerCase().equals("hard")) {
-				g.drawString("Score: " + String.valueOf(getScore("hard")), 90, 200); // drawning final score of the round
-
-				checkIfNewHighscore("hard");
-			}
-
-			
 
 			g.setFont(new Font("Arial", Font.BOLD, 20));
 			g.drawString("Play again: 'space' ", 100, 325);
-			
-			
-			
+			g.drawString("Top 10 highscore: 'H' ", 100, 345);
 			
 
 			return;
 		}
 
 		image.paintIcon(this, g, 0, 0);
-		
+
 		g.setColor(Color.black);
 		g.setFont(new Font("Arial", Font.BOLD, 50));
 
@@ -192,125 +177,148 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 		}
 
-		g.setColor(Color.black);
+		g.setColor(Color.yellow);
 		g.fillRect(Birb.x, Birb.y, Birb.width, Birb.height);
 
-		
-		
-		
-		
+		g.setColor(Color.yellow);
+		g.fillRect(Birb.x + 20, Birb.y - 6, Birb.width / 2, Birb.height - 7);
+
+		g.setColor(Color.orange);
+		g.fillRect(Birb.x + 35, Birb.y - 3, Birb.width / 4, Birb.height / 3);
+
+		g.setColor(Color.black);
+		g.fillRect(Birb.x + 25, Birb.y - 4, Birb.width / 5, Birb.height / 4);
+
+		g.setColor(Color.black);
+		g.fillRect(Birb.x + 5, Birb.y + 20, Birb.width / 7, Birb.height / 3);
+
+		g.setColor(Color.black);
+		g.fillRect(Birb.x + 10, Birb.y + 20, Birb.width / 7, Birb.height / 3);
+
+		if (yFall == 0) {
+			g.setColor(new Color(247, 176, 60));
+			g.fillRect(Birb.x + 2, Birb.y + 5, Birb.width / 2, Birb.height - 15);
+		}
+
+		if (yFall < 0 && yFall > -2) {
+			g.setColor(new Color(247, 176, 60));
+			g.fillRect(Birb.x + 2, Birb.y + 5, Birb.width / 2, Birb.height - 10); // Going up animation
+		}
+
+		if (yFall < -2) {
+			g.setColor(new Color(247, 176, 60));
+			g.fillRect(Birb.x + 2, Birb.y + 5, Birb.width / 2, Birb.height - 5);
+		}
+
+		if (yFall > 0 && yFall < 2) {
+			g.setColor(new Color(247, 176, 60));
+			g.fillRect(Birb.x + 2, Birb.y + 3, Birb.width / 2, Birb.height - 10); // Falling animation
+		}
+
+		if (yFall > 2) {
+			g.setColor(new Color(247, 176, 60));
+			g.fillRect(Birb.x + 2, Birb.y - 6, Birb.width / 2, Birb.height - 5);
+		}
+
 	}
 
-	
 	public void checkIfNewHighscore(String difficultyDivideNumber) {
 
-		
 		System.out.println("kommer til rad 200");
-		
-		
-		for (Map.Entry<Integer,String> entry : mapForHighscores.entrySet()) {
-			
-			System.out.println("Key = " + entry.getKey() + 
-					", Value = " + entry.getValue()); 
-			
+
+		for (Map.Entry<Integer, String> entry : mapForHighscores.entrySet()) {
+
+			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+
 			File nameOfTheFile = new File("highscore/highscore.txt");
-			if(mapForHighscores.containsKey(getScore(difficulty)) && nameOfTheFile.length() != 0) {
-				mapForHighscores.put(getScore(difficultyDivideNumber), entry.getValue() + ", etttillnamn");
+			if (mapForHighscores.containsKey(getScore(difficulty)) && nameOfTheFile.length() != 0) {
+				String highscoreUserName = JOptionPane.showInputDialog(mainFrame,
+						"New top 10 Highscore! Enter username: ");
+				mapForHighscores.put(getScore(difficultyDivideNumber), entry.getValue() + ", " + highscoreUserName);
+				break;
+			} else if (entry.getKey() < getScore(difficultyDivideNumber)) {
+
+				setToptenHighscoreUsername(difficultyDivideNumber);
+				break;
+
+			} else if (mapForHighscores.size() < 10 && mapForHighscores.size() > 1) {
+
+				setToptenHighscoreUsername(difficultyDivideNumber);
 				break;
 			}
-			else if (entry.getKey() < getScore(difficultyDivideNumber)) {
-				//String testar = String.valueOf(getScore() / difficultyDivideNumber);
-				mapForHighscores.put(getScore(difficultyDivideNumber), "HärSkaViSKrivaNamnSen");
-				break;
-				
-			}else if(mapForHighscores.size() < 10) {
-				mapForHighscores.put(getScore(difficultyDivideNumber), "Hjkaa");
-				break;
-			}
-	
+
 		}
-	
+
 		setHigscore();
-		
-		
+
 	}
-	
-	
-	
-	
+
+	public void setToptenHighscoreUsername(String difficultyDivideNumber) {
+
+		String highscoreUserName = JOptionPane.showInputDialog(newFrame, "New top 10 Highscore! Enter username: ");
+		mapForHighscores.put(getScore(difficultyDivideNumber), highscoreUserName);
+
+	}
+
 	public void setHigscore() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter("highscore/highscore.txt"));) {
-			
-			
-			if (mapForHighscores.size() > 10) {
-				mapForHighscores.remove(10);
+
+			while (mapForHighscores.size() > 10) {
+				mapForHighscores.remove(((TreeMap<Integer, String>) mapForHighscores).lastKey());
 			}
-			
-			for (Map.Entry<Integer,String> entry : mapForHighscores.entrySet()) {
-					
-				System.out.println(entry.getKey() + " - " + entry.getValue() +"\n");
-				writer.write(entry.getKey() + " - " + entry.getValue() +"\n");
-				
+
+			for (Map.Entry<Integer, String> entry : mapForHighscores.entrySet()) {
+
+				System.out.println(entry.getKey() + " - " + entry.getValue() + "\n");
+				writer.write(entry.getKey() + " - " + entry.getValue() + "\n");
+
 			}
-			
 
 		} catch (Exception e) {
-
+			// glöm inte här
 		}
 
 	}
 
 	public void getHighscore() {
 
-
 		String readHighscoreLine = "";
-		File nameOfTheFile = new File("highscore/highscore.txt");
 		try (BufferedReader reader = new BufferedReader(new FileReader("highscore/highscore.txt"));) {
 			mapForHighscores = new TreeMap<>(Collections.reverseOrder());
-			
-			
-			if(nameOfTheFile.length() == 0) {
-				System.out.println("kommer hit rad 290");
-				mapForHighscores.put(getScore(difficulty), "SättNamnHär");
-			}
-			
-			
+
 			while ((readHighscoreLine = reader.readLine()) != null) {
 				String[] tempArrayForSplittingString = new String[2];
 				tempArrayForSplittingString = readHighscoreLine.split(" - ");
-				
+
 				mapForHighscores.put(Integer.parseInt(tempArrayForSplittingString[0]), tempArrayForSplittingString[1]);
-				
-				
+
 			}
-			
-			
-			
 
 		} catch (Exception e) {
-
+			// glöm inte här
 		}
-		
 
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		if (gameOver) {
 			timer.stop();
+			File nameOfTheFile = new File("highscore/highscore.txt");
+			if (nameOfTheFile.length() == 0) {
+				setToptenHighscoreUsername(difficulty);
+			} else if (this.difficulty.toLowerCase().equals("easy")) {
+				checkIfNewHighscore("easy");
+
+			} else if (this.difficulty.toLowerCase().equals("normal")) {
+				checkIfNewHighscore("normal");
+			} else if (this.difficulty.toLowerCase().equals("hard")) {
+				checkIfNewHighscore("hard");
+			}
+
+			setHigscore();
+
 			return;
 		}
 
@@ -435,15 +443,13 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 	}
 
 	public int getScore(String difficulty) {
-		
-		if(difficulty.equals("easy")) {
-			return score/10;
-		}
-		else if(difficulty.equals("normal")) {
-			return score/7;
-		}
-		else{
-			return score/5;
+
+		if (difficulty.equals("easy")) {
+			return score / 10;
+		} else if (difficulty.equals("normal")) {
+			return score / 7;
+		} else {
+			return score / 5;
 		}
 	}
 
@@ -461,13 +467,12 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 			jump();
 		}
-		if(gameOver && kc == KeyEvent.VK_H) {
-			
+		if (gameOver && kc == KeyEvent.VK_H) {
+
 			showTopTenHighscores = true;
 			repaint();
-			
+
 		}
-		
 
 	}
 }

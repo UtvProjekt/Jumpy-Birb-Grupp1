@@ -22,7 +22,7 @@ public class App {
         JLabel imageLabel = new JLabel();
         imageLabel.setIcon(backgroundImage);
         
-        GameStructure gs = new GameStructure(410, 420, difficulty, backgroundImage);
+        GameStructure gs = new GameStructure(410, 420, difficulty, backgroundImage, main);
 
         main.setSize(410, 420);
         main.setResizable(false);
