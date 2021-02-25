@@ -97,6 +97,40 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 		if (gameOver) {
 
+			
+			if(showTopTenHighscores) {
+			
+				
+				g.setColor(Color.red);
+				g.fillRect(0, 0, 400, 400);
+				g.setColor(Color.black);
+				
+				System.out.println("kommer in hit oscar");
+				
+				
+				int numberRanking = 1;
+				int moveTheDifferentScores = 40;
+				for (Map.Entry<Integer,String> entry : mapForHighscores.entrySet()) {
+					
+					
+					g.setFont(new Font("Arial", Font.BOLD, 20));
+					g.drawString(numberRanking + ". " + entry.getKey() + " - " + entry.getValue(), 35, moveTheDifferentScores);
+					numberRanking++;
+					moveTheDifferentScores += 30;
+					
+				}
+				
+				
+				
+				g.setFont(new Font("Arial", Font.BOLD, 20));
+				g.drawString("Play again: 'space' ", 100, 325); // drawning highscore
+				showTopTenHighscores = false;
+				return;
+				
+			}
+			
+			
+			
 			g.setColor(Color.red);
 			g.fillRect(0, 0, d.width, d.height);
 			g.setColor(Color.black);
@@ -126,37 +160,11 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 			g.setFont(new Font("Arial", Font.BOLD, 20));
 			g.drawString("Play again: 'space' ", 100, 325);
-
-			if(showTopTenHighscores) {
-				showTopTenHighscores = false;
 			
-				
-				g.setColor(Color.red);
-				g.fillRect(0, 0, 400, 400);
-				g.setColor(Color.black);
-				
-				
-				int numberRanking = 1;
-				int moveTheDifferentScores = 40;
-				for (Map.Entry<Integer,String> entry : mapForHighscores.entrySet()) {
-					
-					
-					g.setFont(new Font("Arial", Font.BOLD, 20));
-					g.drawString(numberRanking + ". " + entry.getKey() + " - " + entry.getValue(), 35, moveTheDifferentScores);
-					numberRanking++;
-					moveTheDifferentScores += 30;
-					
-				}
-				
-				
-				
-				g.setFont(new Font("Arial", Font.BOLD, 20));
-				g.drawString("Play again: 'space' ", 100, 325); // drawning highscore
-				
-				
-			}
-
 			
+			
+			
+
 			return;
 		}
 
@@ -184,6 +192,10 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 		g.setColor(Color.black);
 		g.fillRect(Birb.x, Birb.y, Birb.width, Birb.height);
 
+		
+		
+		
+		
 	}
 
 	
@@ -198,24 +210,21 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 			System.out.println("Key = " + entry.getKey() + 
 					", Value = " + entry.getValue()); 
 			
-			
-			if(mapForHighscores.containsKey(getScore(difficulty))) {
+			File nameOfTheFile = new File("highscore/highscore.txt");
+			if(mapForHighscores.containsKey(getScore(difficulty)) && nameOfTheFile.length() != 0) {
 				mapForHighscores.put(getScore(difficultyDivideNumber), entry.getValue() + ", etttillnamn");
 				break;
 			}
 			else if (entry.getKey() < getScore(difficultyDivideNumber)) {
 				//String testar = String.valueOf(getScore() / difficultyDivideNumber);
-				
-				
 				mapForHighscores.put(getScore(difficultyDivideNumber), "HärSkaViSKrivaNamnSen");
 				break;
+				
 			}else if(mapForHighscores.size() < 10) {
-				mapForHighscores.put(getScore(difficultyDivideNumber), "Hjk");
+				mapForHighscores.put(getScore(difficultyDivideNumber), "Hjkaa");
 				break;
 			}
-			
-			
-			
+	
 		}
 	
 		setHigscore();
