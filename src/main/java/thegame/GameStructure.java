@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -43,13 +44,15 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 	private int speed;
 	private boolean showTopTenHighscores;
 	private Map<Integer, String> mapForHighscores;
+	private ImageIcon image;
 
-	public GameStructure(final int width, final int height, String difficulty) {
+	public GameStructure(final int width, final int height, String difficulty, ImageIcon image) {
 		this.gameOver = false;
 		this.started = false;
 		this.pipes = new ArrayList<>();
 		this.score = 0; // making the round score == 0
 		this.difficulty = difficulty;
+		this.image = image;
 		showTopTenHighscores = false;
 		
 		for (int i = 0; i < 1; ++i) {
@@ -68,6 +71,7 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		image.paintIcon(this, g, 0, 0);
 		try {
 			repaint(g);
 		} catch (IOException e) {
@@ -168,9 +172,8 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 			return;
 		}
 
-		g.setColor(Color.cyan);
-		g.fillRect(0, 0, d.width, d.height);
-
+		image.paintIcon(this, g, 0, 0);
+		
 		g.setColor(Color.black);
 		g.setFont(new Font("Arial", Font.BOLD, 50));
 
