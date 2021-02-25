@@ -1,5 +1,4 @@
 package thegame;
-<<<<<<< HEAD
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -307,7 +306,7 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 			}
 
 		}catch (IOException ex) {
-			System.err.println("Ett fel intrÃ¤ffade!" + ex.getMessage());
+			System.err.println("Ett fel intrÃƒÂ¤ffade!" + ex.getMessage());
 		}
 
 	}
@@ -333,7 +332,7 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 		} catch (FileNotFoundException ex) {
 			System.err.println("Kunde inte hitta filen: " + ex.getMessage());
 		}catch (IOException ex) {
-			System.err.println("Ett fel intrÃ¤ffade!" + ex.getMessage());
+			System.err.println("Ett fel intrÃƒÂ¤ffade!" + ex.getMessage());
 		}
 
 	}
@@ -710,7 +709,7 @@ import javax.swing.JPanel;
 
 	            	line = getHighscore();
 
-	            	System.out.println("här: " + line);
+	            	System.out.println("hÃ¤r: " + line);
 	            	
 	            	g.setFont(new Font("Arial", Font.BOLD, 50));
 	            	g.drawString("Highscore: " + line, 45, 275); // drawning highscore
@@ -801,11 +800,11 @@ import javax.swing.JPanel;
                 speed = 4;
             }
 	        
-	        ticks++; // gör att det bli varannan gång
+	        ticks++; // gÃ¶r att det bli varannan gÃ¥ng
 	        
 	        if (started)
 	        {
-	        	for (int i = 0; i < pipes.size(); i++) // bestämmer hur snabbt positionen på de gröna pellarna ska förflyttas
+	        	for (int i = 0; i < pipes.size(); i++) // bestÃ¤mmer hur snabbt positionen pÃ¥ de grÃ¶na pellarna ska fÃ¶rflyttas
 				{
 					Rectangle column = pipes.get(i);
 					column.x -= speed;
