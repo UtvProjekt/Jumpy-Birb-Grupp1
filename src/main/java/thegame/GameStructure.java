@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,71 +34,92 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 	private boolean gameOver, started;
 	private Timer timer;
-	private List<Rectangle> pipes;
-	private Rectangle test, upp, down;
+	private List<Rectangle> listOfPipes;
+	private Rectangle scoreRectangle, upperBorder, bottomBorder;
 	private Rectangle Birb;
-	public int ticks, yFall, score;
-	public int highScore;
+	private int ticks, yFall, score;
 	private String difficulty;
 	private int speed;
 	private boolean showTopTenHighscores;
 	private Map<Integer, String> mapForHighscores;
 	private ImageIcon image;
 	private JFrame mainFrame;
-	private JFrame newFrame = new JFrame();
+	private boolean keyHold;
 
+	/**
+	 * GameStructure is an constructor that is setting the starting values
+	 * and starting the game!
+	 * 
+	 * 
+	 * @param width width of game area
+	 * @param height height of game area
+	 * @param difficulty type of difficulty
+	 * @param image image for background
+	 * @param mainFrame application window
+	 */
 	public GameStructure(final int width, final int height, String difficulty, ImageIcon image, JFrame mainFrame) {
 		this.gameOver = false;
 		this.started = false;
-		this.pipes = new ArrayList<>();
-		this.score = 0; // making the round score == 0
+		this.listOfPipes = new ArrayList<>();
+		this.score = 0;
 		this.difficulty = difficulty;
 		this.image = image;
 		this.mainFrame = mainFrame;
 		showTopTenHighscores = false;
+		this.keyHold = true;
 
 		for (int i = 0; i < 1; ++i) {
-			addPipes(width, height);
+			addlistOfPipes();
 		}
 
 		this.Birb = new Rectangle(20, width / 2 - 15, 30, 20);
-		test = new Rectangle(20, 1, 10, 20);
-		upp = new Rectangle(0, -10, 400, 5);
-		down = new Rectangle(0, 420, 400, 5);
+		scoreRectangle = new Rectangle(20, 1, 10, 20);
+		upperBorder = new Rectangle(0, -10, 400, 5);
+		bottomBorder = new Rectangle(0, 420, 400, 5);
 
 		this.timer = new Timer(20, this);
 		this.timer.start();
 	}
 
+	/**
+	 * method that paints the game.
+	 * 
+	 * @param g containing graphics
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		image.paintIcon(this, g, 0, 0);
-		try {
-			repaint(g);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		repaint(g);
+		
 	}
 
-	private void addPipes(final int width, final int height) {
-		int a = ThreadLocalRandom.current().nextInt(40, 220);
-		int y2 = 0;
+	/**
+	 * A method that creates new pipes that the birb interacts with.
+	 * 
+	 * 
+	 */
+	private void addlistOfPipes() {
+		int randomHeightNumber = ThreadLocalRandom.current().nextInt(40, 220);
+		int y = 0;
 		int x = 400;
-		int y = 300;
 		if (this.difficulty.toLowerCase().equals("easy")) {
-			pipes.add(new Rectangle(x, y2, 20, a));
-			pipes.add(new Rectangle(x, a + 130, 20, 400));
+			listOfPipes.add(new Rectangle(x, y, 20, randomHeightNumber));
+			listOfPipes.add(new Rectangle(x, randomHeightNumber + 130, 20, 400));
 		} else {
 
-			pipes.add(new Rectangle(x, y2, 20, a));
-			pipes.add(new Rectangle(x, a + 100, 20, 400));
+			listOfPipes.add(new Rectangle(x, y, 20, randomHeightNumber));
+			listOfPipes.add(new Rectangle(x, randomHeightNumber + 100, 20, 400));
 		}
 
 	}
 
-	private void repaint(Graphics g) throws IOException {
+	/**
+	 * repaint is a method that continuously paints the rectangles, scores and gameover screen
+	 * 
+	 * @param g g contains graphics from the game
+	 */
+	private void repaint(Graphics g){
 		final Dimension d = this.getSize();
 
 		if (gameOver) {
@@ -121,7 +143,7 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 				}
 
 				g.setFont(new Font("Arial", Font.BOLD, 20));
-				g.drawString("Play again: 'space' ", 100, 345); // drawning highscore
+				g.drawString("Play again: 'space' ", 100, 345);
 				showTopTenHighscores = false;
 				return;
 
@@ -137,13 +159,13 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 			g.setFont(new Font("Arial", Font.BOLD, 50));
 			if (this.difficulty.toLowerCase().equals("easy")) {
-				g.drawString("Score: " + String.valueOf(getScore("easy")), 90, 200); // drawning final score of the
+				g.drawString("Score: " + String.valueOf(getScore("easy")), 90, 200); // drawing final score of the
 																						// round
 			} else if (this.difficulty.toLowerCase().equals("normal")) {
-				g.drawString("Score: " + String.valueOf(getScore("normal")), 90, 200); // drawning final score of the
+				g.drawString("Score: " + String.valueOf(getScore("normal")), 90, 200); // drawing final score of the
 																						// round
 			} else if (this.difficulty.toLowerCase().equals("hard")) {
-				g.drawString("Score: " + String.valueOf(getScore("hard")), 90, 200); // drawning final score of the
+				g.drawString("Score: " + String.valueOf(getScore("hard")), 90, 200); // drawing final score of the
 																						// round
 
 			}
@@ -156,7 +178,7 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 			return;
 		}
 
-		image.paintIcon(this, g, 0, 0);
+		
 
 		g.setColor(Color.black);
 		g.setFont(new Font("Arial", Font.BOLD, 50));
@@ -169,7 +191,7 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 			g.drawString(String.valueOf(getScore("hard")), 175, 100); // updating score
 		}
 
-		for (Rectangle pipe : pipes) {
+		for (Rectangle pipe : listOfPipes) {
 
 			g.setColor(Color.green);
 			g.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
@@ -221,6 +243,12 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 	}
 
+	/**
+	 * checkIfNewHighscore is a method that keeps track if the users latest score is an highscore or not
+	 * 
+	 * 
+	 * @param difficultyDivideNumber contains which difficulty the game runs in
+	 */
 	public void checkIfNewHighscore(String difficultyDivideNumber) {
 
 		int tempNumberForCheckingMap = 0;
@@ -250,6 +278,11 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 	}
 
+	/**
+	 * setToptenHighscoreUsername is a method that makes the player type in a name upon new highscore
+	 * 
+	 * @param difficultyDivideNumber contains which difficulty the game runs in
+	 */
 	public void setToptenHighscoreUsername(String difficultyDivideNumber) {
 
 		String highscoreUserName = JOptionPane.showInputDialog(mainFrame, "New top 10 Highscore! Enter username: ");
@@ -257,6 +290,9 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 	}
 
+	/**
+	 * setHighscore is a method that writes the list of highscores into a text file
+	 */
 	public void setHigscore() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter("highscore/highscore.txt"));) {
 
@@ -269,12 +305,16 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 			}
 
-		} catch (Exception e) {
-			// glöm inte här
+		}catch (IOException ex) {
+			System.err.println("Ett fel intrÃ¤ffade!" + ex.getMessage());
 		}
 
 	}
 
+	/**
+	 * getHighscore is a method that reads the text file containing the 10 highest scores and splitting
+	 * and adding them to a map.
+	 */
 	public void getHighscore() {
 
 		String readHighscoreLine = "";
@@ -289,12 +329,19 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 			}
 
-		} catch (Exception e) {
-			// glöm inte här
+		} catch (FileNotFoundException ex) {
+			System.err.println("Kunde inte hitta filen: " + ex.getMessage());
+		}catch (IOException ex) {
+			System.err.println("Ett fel intrÃ¤ffade!" + ex.getMessage());
 		}
 
 	}
 
+	/**
+	 * actionPerformed is controlling the state of the game
+	 * 
+	 * @param e contains an interaction with the user
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -317,24 +364,14 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 			return;
 		}
 
-		if (this.difficulty.toLowerCase().equals("easy")) {
-			speed = 3;
-		} else if (this.difficulty.toLowerCase().equals("normal")) {
-			speed = 4;
-		} else if (this.difficulty.toLowerCase().equals("hard")) {
-			speed = 6;
-		} else {
-			this.difficulty = "normal";
-			speed = 4;
-		}
-
-		ticks++; // gör att det bli varannan gång
+		checkDifficulty();
+		
+		ticks++;
 
 		if (started) {
-			for (int i = 0; i < pipes.size(); i++) // bestämmer hur snabbt positionen på de gröna pellarna ska
-													// förflyttas
+			for (int i = 0; i < listOfPipes.size(); i++)
 			{
-				Rectangle column = pipes.get(i);
+				Rectangle column = listOfPipes.get(i);
 				column.x -= speed;
 			}
 
@@ -346,17 +383,17 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 		}
 
-		if (test.intersects(pipes.get(0))) {
+		if (scoreRectangle.intersects(listOfPipes.get(0))) {
 			setScore();
 		}
 
-		if (Birb.intersects(upp) || Birb.intersects(down)) {
+		if (Birb.intersects(upperBorder) || Birb.intersects(bottomBorder)) {
 			gameOver = true;
 		}
 
 		final List<Rectangle> toRemove = new ArrayList<>();
 
-		for (Rectangle pipe : pipes) {
+		for (Rectangle pipe : listOfPipes) {
 			if (pipe.x + pipe.width < 0) {
 				toRemove.add(pipe);
 			}
@@ -367,13 +404,12 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 		}
 
-		pipes.removeAll(toRemove);
+		listOfPipes.removeAll(toRemove);
 
 		for (int i = 0; i < toRemove.size() / 2; ++i) {
 
 			if (i == 0) {
-				Dimension d = getSize();
-				addPipes(d.width, d.height);
+				addlistOfPipes();
 
 			}
 		}
@@ -382,38 +418,83 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 	}
 
 	/**
-	 * If the player presses SPACE then it calls the function jump
+	 * keyReleased is a function that runs upon the release of a key
+	 * 
+	 * @param e contains a users interaction with keyboard
 	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
 		if (gameOver == true) {
-			final int rbutton = e.getKeyCode();
-			if (rbutton == KeyEvent.VK_SPACE) {
+			final int spacebutton = e.getKeyCode();
 
+			if (spacebutton == KeyEvent.VK_SPACE) {
+				
 				speed = 4;
 				yFall = 0;
 				this.gameOver = false;
 				this.started = false;
-				this.pipes = new ArrayList<>();
-				this.score = 0; // making the round score == 0
+				this.listOfPipes = new ArrayList<>();
+				this.score = 0;
 
 				for (int i = 0; i < 1; ++i) {
-					addPipes(400, 400);
+					addlistOfPipes();
 				}
 
 				this.Birb = new Rectangle(20, 400 / 2 - 15, 30, 20);
-				test = new Rectangle(20, 1, 10, 80);
+				scoreRectangle = new Rectangle(20, 1, 10, 80);
 
 				this.timer = new Timer(20, this);
 				this.timer.start();
 
 			}
 		}
+		
+			int kc = e.getKeyCode();
+		if (kc == KeyEvent.VK_SPACE) {
+			keyHold = true;
+		}
+		
 	}
+	
+	/**
+	 * testingIflistOfPipesCreates is a method that helps with testing
+	 * 
+	 * @return returns the number of objects in listofpipes
+	 */
+	public int testingIflistOfPipesCreates() {
+        this.listOfPipes = new ArrayList<>();
+            addlistOfPipes();
+            return this.listOfPipes.size();
+    }
 
 	/**
+	 * checkDifficulty is a function that returns the speed depending on what difficulty
 	 * 
-	 * This controls the jump effect with the interact function above.
+	 * @return returns the speed
+	 */
+    public int checkDifficulty() {
+        if (this.difficulty.toLowerCase().equals("easy")) {
+            return speed = 3;
+        } else if (this.difficulty.toLowerCase().equals("normal")) {
+            return speed = 4;
+        } else if (this.difficulty.toLowerCase().equals("hard")) {
+            return speed = 6;
+        } else {
+            this.difficulty = "normal";
+            return speed = 4;
+        }
+    }
+	
+    /**
+     * @return returns yFall
+     */
+    public int getyFall() {
+    	return yFall;
+    }
+
+	/**
+	 * jump is a method that controls the y-movement of the birb
+	 * 
 	 */
 	public void jump() {
 
@@ -438,6 +519,12 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 		score++;
 	}
 
+	/**
+	 * getScore, a method that returns score
+	 * 
+	 * @param difficulty contains the difficulty the game is running in
+	 * @return returns the score depending on the difficulty
+	 */
 	public int getScore(String difficulty) {
 
 		if (difficulty.equals("easy")) {
@@ -454,13 +541,17 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 		// do nothing
 	}
 
+	/**
+	 * keyPressed is a function that runs upon the press of a key
+	 * 
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 
 		final int kc = e.getKeyCode();
 
-		if (kc == KeyEvent.VK_SPACE) {
-
+		if (kc == KeyEvent.VK_SPACE && keyHold == true) {
+			keyHold = false;
 			jump();
 		}
 		if (gameOver && kc == KeyEvent.VK_H) {
