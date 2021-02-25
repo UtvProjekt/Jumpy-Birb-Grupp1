@@ -17,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -224,38 +223,36 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 	public void checkIfNewHighscore(String difficultyDivideNumber) {
 
-		System.out.println("kommer til rad 200");
-
+		int tempNumberForCheckingMap = 0;
 		for (Map.Entry<Integer, String> entry : mapForHighscores.entrySet()) {
 
-			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
-
 			File nameOfTheFile = new File("highscore/highscore.txt");
-			if (mapForHighscores.containsKey(getScore(difficulty)) && nameOfTheFile.length() != 0) {
+			if (entry.getKey() == getScore(difficulty) && nameOfTheFile.length() != 0) {
 				String highscoreUserName = JOptionPane.showInputDialog(mainFrame,
 						"New top 10 Highscore! Enter username: ");
 				mapForHighscores.put(getScore(difficultyDivideNumber), entry.getValue() + ", " + highscoreUserName);
+				tempNumberForCheckingMap++;
 				break;
 			} else if (entry.getKey() < getScore(difficultyDivideNumber)) {
 
 				setToptenHighscoreUsername(difficultyDivideNumber);
+				tempNumberForCheckingMap++;
 				break;
 
-			} else if (mapForHighscores.size() < 10 && mapForHighscores.size() > 1) {
-
-				setToptenHighscoreUsername(difficultyDivideNumber);
-				break;
-			}
 
 		}
-
+		}   
+		if (mapForHighscores.size() < 10 && mapForHighscores.size() > 0 && tempNumberForCheckingMap != 1) {
+			
+			setToptenHighscoreUsername(difficultyDivideNumber);
+		}
 		setHigscore();
 
 	}
 
 	public void setToptenHighscoreUsername(String difficultyDivideNumber) {
 
-		String highscoreUserName = JOptionPane.showInputDialog(newFrame, "New top 10 Highscore! Enter username: ");
+		String highscoreUserName = JOptionPane.showInputDialog(mainFrame, "New top 10 Highscore! Enter username: ");
 		mapForHighscores.put(getScore(difficultyDivideNumber), highscoreUserName);
 
 	}
@@ -268,8 +265,6 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 			}
 
 			for (Map.Entry<Integer, String> entry : mapForHighscores.entrySet()) {
-
-				System.out.println(entry.getKey() + " - " + entry.getValue() + "\n");
 				writer.write(entry.getKey() + " - " + entry.getValue() + "\n");
 
 			}
@@ -329,6 +324,7 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 		} else if (this.difficulty.toLowerCase().equals("hard")) {
 			speed = 6;
 		} else {
+			this.difficulty = "normal";
 			speed = 4;
 		}
 
