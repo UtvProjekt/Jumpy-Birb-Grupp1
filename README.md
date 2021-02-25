@@ -8,3 +8,7 @@ Grupp 1 Java20
 2. Go to your eclipse, then choose file, import, maven, existing maven project, then click browse and find the "JumpyBirbGame" folder in your file explorer.
 3. Select it and click finish, you should now have a maven project named: "JumpyBirbGame".
 4. At last you only have to run JumpyBirbGame as a java application.
+
+How to Play!
+* Spacebar - Start or restart the round (jump while game has started)
+* H - Show leaderboard (only when game is over)
