@@ -48,7 +48,11 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 
 	/**
 	 * GameStructure is an constructor that is setting the starting values
+<<<<<<< HEAD
 	 * and starting the game!
+=======
+	 * and starting the game.
+>>>>>>> 92ca4aa... adding the final version of flappy birb
 	 * 
 	 * 
 	 * @param width width of game area
@@ -306,7 +310,10 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 			}
 
 		}catch (IOException ex) {
+
 			System.err.println("Ett fel intrÃ¤ffade!" + ex.getMessage());
+
+			System.err.println("Ett fel intr�ffade!" + ex.getMessage()); //adding the final version of flappy birb
 		}
 
 	}
@@ -332,7 +339,10 @@ public class GameStructure extends JPanel implements ActionListener, KeyListener
 		} catch (FileNotFoundException ex) {
 			System.err.println("Kunde inte hitta filen: " + ex.getMessage());
 		}catch (IOException ex) {
+
 			System.err.println("Ett fel intrÃ¤ffade!" + ex.getMessage());
+
+			System.err.println("Ett fel intr�ffade!" + ex.getMessage()); //adding the final version of flappy birb
 		}
 
 	}
